@@ -1,0 +1,10 @@
+Welcome to the shared file system!
+
+This is a sample text file that can be copied to user directories.
+
+You can use the following commands:
+- shared: List all shared files
+- copy <filename>: Copy a shared file to your directory
+- copy <filename> <newname>: Copy and rename a shared file
+
+Enjoy!

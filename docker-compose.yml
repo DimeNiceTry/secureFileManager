@@ -1,0 +1,47 @@
+services:
+  app:
+    build: .
+    image: secure-file-manager-python
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./safe_storage:/app/safe_storage
+      - ./.env:/app/.env:ro
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://user:password@db:5432/secure_db
+      - ROOT_STORAGE_PATH=/app/safe_storage
+      - DEBUG=true
+      - LOG_LEVEL=INFO
+    stdin_open: true
+    tty: true
+    networks:
+      - secure_network
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: secure_db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --lc-collate=C --lc-ctype=C"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init_python.sql:/docker-entrypoint-initdb.d/001_init.sql
+      - ./init_directories.sql:/docker-entrypoint-initdb.d/002_directories.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d secure_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - secure_network
+
+volumes:
+  postgres_data:
+
+networks:
+  secure_network:
+    driver: bridge

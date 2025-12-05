@@ -1,0 +1,19 @@
+{
+  "name": "Secure File Manager",
+  "version": "1.0.0",
+  "description": "A secure file management system with encryption and access control",
+  "features": [
+    "File encryption",
+    "User authentication",
+    "Directory management",
+    "Archive creation",
+    "JSON/XML processing",
+    "Shared file access"
+  ],
+  "security": {
+    "path_traversal_protection": true,
+    "zip_bomb_detection": true,
+    "xxe_prevention": true,
+    "secure_password_hashing": true
+  }
+}
